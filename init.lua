@@ -20,7 +20,8 @@ local function load_plugins()
   require('packer').startup {
     {
       'wbthomason/packer.nvim',
-      'neovim/nvim-lspconfig',
+      'lewis6991/impatient.nvim',
+      {'jakewvincent/mkdnflow.nvim', config=require('mkdnflow').setup({})}
     },
     config = {
       package_root = package_root,
@@ -30,56 +31,7 @@ local function load_plugins()
 end
 
 _G.load_config = function()
-  vim.lsp.set_log_level 'trace'
-  if vim.fn.has 'nvim-0.5.1' == 1 then
-    require('vim.lsp.log').set_format_func(vim.inspect)
-  end
-  local nvim_lsp = require 'lspconfig'
-  local on_attach = function(_, bufnr)
-    local function buf_set_option(...)
-      vim.api.nvim_buf_set_option(bufnr, ...)
-    end
-
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-    -- Mappings.
-    local opts = { buffer = bufnr, noremap = true, silent = true }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wl', function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-    vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-  end
-
-  -- Add the server that troubles you here
-  local name = 'pyright'
-  local cmd = { 'pyright-langserver', '--stdio' } -- needed for elixirls, omnisharp, sumneko_lua
-  if not name then
-    print 'You have not defined a server name, please edit minimal_init.lua'
-  end
-  if not nvim_lsp[name].document_config.default_config.cmd and not cmd then
-    print [[You have not defined a server default cmd for a server
-      that requires it please edit minimal_init.lua]]
-  end
-
-  nvim_lsp[name].setup {
-    cmd = cmd,
-    on_attach = on_attach,
-  }
-
-  print [[You can find your log at $HOME/.cache/nvim/lsp.log. Please paste in a github issue under a details tag as described in the issue template.]]
+  -- your configurations go here:
 end
 
 if vim.fn.isdirectory(install_path) == 0 then
